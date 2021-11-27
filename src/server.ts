@@ -44,7 +44,7 @@ app.use(express.static("uploads"));
 if (process.env.NODE_ENV === "production") {
   //e.g. Heroku is running our app
   // app.use(express.static("client/build"));
-  app.use(express.static(path.join(path.resolve("./"), "/client/build")));
+  // app.use(express.static(path.join(path.resolve("./"), "/client/build")));
 
   console.log(`I AM IN PRODUCTION`);
 }
