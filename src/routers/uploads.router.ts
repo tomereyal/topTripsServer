@@ -25,7 +25,11 @@ uploadRouter.post("/", authAdmin, upload.single("avatar"), (req, res) => {
     `./uploads/${req.file?.filename}`,
     `./uploads/${newFilename}`,
     () => {
-      res.status(200).send({ url: `${process.env.SERVER_URL}/${newFilename}` });
+      const serverName =
+        process.env.NODE_ENV === "production"
+          ? "https://toptrips.herokuapp.com"
+          : process.env.SERVER_URL;
+      res.status(200).send({ url: `${serverName}/uploads/${newFilename}` });
     }
   );
 });

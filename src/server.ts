@@ -69,8 +69,7 @@ app.use("/api/users", userRouter);
 app.use("/api/vacations", vacationRouter);
 app.use("/api/uploads", uploadRouter);
 
-app.get("/*", (req, res) => {
-  const rootDirectory = path.resolve("./");
+app.get("/", (req, res) => {
   // res.sendFile(path.join(rootDirectory, "client/build", "index.html"));
   res.status(200).json({ message: "welcome ", stage: process.env.NODE_ENV });
 });
