@@ -32,12 +32,16 @@ userRouter.get(
     res: Response<{ isUsernameTaken: boolean }>,
     next: NextFunction
   ) => {
-    const { username } = req.query;
-    if (!username)
+    try {
+      const { username } = req.query;
+      if (!username)
+        return next(new HttpException(500, "Username was not provided"));
+      const isUsernameTaken = await isUsername(username);
+      console.log(`isUsernameTaken`, isUsernameTaken);
+      return res.status(200).send({ isUsernameTaken });
+    } catch (error) {
       return next(new HttpException(500, "Username was not provided"));
-    const isUsernameTaken = await isUsername(username);
-    console.log(`isUsernameTaken`, isUsernameTaken);
-    return res.status(200).send({ isUsernameTaken });
+    }
   }
 );
 
