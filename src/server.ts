@@ -71,7 +71,12 @@ app.use("/api/uploads", uploadRouter);
 
 app.get("/*", (req, res) => {
   // res.send("Hi there!");
-  res.sendFile(path.join(__dirname, "/client/build", "index.html"));
+
+  // ==> if you chose to put client folder outside service folder.. this will give you the toptrips parent folder
+  var rootFolder = __dirname.split("/").pop();
+  var rootrootFolder = rootFolder?.split("/").pop();
+  console.log(`rootrootFolder`, rootFolder);
+  res.sendFile("/client/build/index.html");
 });
 
 const ClientListener = {
