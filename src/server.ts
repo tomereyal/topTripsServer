@@ -72,7 +72,7 @@ app.use("/api/uploads", uploadRouter);
 app.get("/*", (req, res) => {
   const rootDirectory = path.resolve("./");
   // res.sendFile(path.join(rootDirectory, "client/build", "index.html"));
-  res.status(200).json({ message: "welcome" });
+  res.status(200).json({ message: "welcome ", stage: process.env.NODE_ENV });
 });
 
 const ClientListener = {
