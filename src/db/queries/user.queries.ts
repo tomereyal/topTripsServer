@@ -8,7 +8,7 @@ export async function insertNewUser(userDetails: Partial<UserModel>) {
 
   try {
     const [result] = await db.query<ResultSetHeader>(
-      `INSERT INTO heroku_98a56fc31c47ffd.users (first_name , last_name ,username,password)  
+      `INSERT INTO users (first_name , last_name ,username,password)  
       VALUES (?,?,?,?) `,
       [firstName, lastName, username, password]
     );
@@ -38,7 +38,7 @@ export async function getUser(username: string) {
 export async function isUsername(queriedUsername: string) {
   const [[results]] = await db.query<DbQueryResult<{ username: string }>>(
     `
-  SELECT username FROM trips.users where username= ?;
+  SELECT username FROM users where username= ?;
     `,
     [queriedUsername]
   );
