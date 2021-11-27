@@ -44,7 +44,7 @@ app.use(express.static("uploads"));
 if (process.env.NODE_ENV === "production") {
   //e.g. Heroku is running our app
   // app.use(express.static("client/build"));
-  app.use(express.static(path.join(__dirname, "/client/build")));
+  app.use(express.static(path.join(path.resolve("./"), "/client/build")));
 
   console.log(`I AM IN PRODUCTION`);
 }
@@ -70,10 +70,8 @@ app.use("/api/vacations", vacationRouter);
 app.use("/api/uploads", uploadRouter);
 
 app.get("/*", (req, res) => {
-  // res.send("Hi there!");
-
-  console.log(`root?`, path.join(__dirname, "client/build", "index.html"));
-  res.sendFile(path.join(__dirname, "client/build", "index.html"));
+  const rootDirectory = path.resolve("./");
+  res.sendFile(path.join(rootDirectory, "client/build", "index.html"));
 });
 
 const ClientListener = {
