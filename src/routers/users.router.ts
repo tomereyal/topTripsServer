@@ -75,11 +75,20 @@ userRouter.get(
         );
 
       const { id, isAdmin = false, firstName, lastName } = user;
-      res.cookie("refreshToken", newRefreshToken, {
-        maxAge: 60 * 60 * 24 * 60 * 1000,
-        httpOnly: true,
-        // secure:true, not during development
-      });
+
+      if (process.env.NODE_ENV === "production") {
+        res.cookie("refreshToken", newRefreshToken, {
+          maxAge: 60 * 60 * 24 * 60 * 1000,
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        });
+      } else {
+        res.cookie("refreshToken", newRefreshToken, {
+          maxAge: 60 * 60 * 24 * 60 * 1000,
+          httpOnly: true,
+        });
+      }
 
       return res.status(200).send({
         accessToken: newAccessToken,
@@ -131,10 +140,19 @@ userRouter.post(
         );
       const { id, isAdmin = false, firstName, lastName } = user;
 
-      res.cookie("refreshToken", newRefreshToken, {
-        maxAge: 60 * 60 * 24 * 60 * 1000,
-        httpOnly: true,
-      });
+      if (process.env.NODE_ENV === "production") {
+        res.cookie("refreshToken", newRefreshToken, {
+          maxAge: 60 * 60 * 24 * 60 * 1000,
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
+        });
+      } else {
+        res.cookie("refreshToken", newRefreshToken, {
+          maxAge: 60 * 60 * 24 * 60 * 1000,
+          httpOnly: true,
+        });
+      }
 
       return res.status(200).send({
         accessToken: newAccessToken,
