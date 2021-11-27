@@ -1,0 +1,22 @@
+@import "~antd/dist/antd.css";
+
+@import url("https://fonts.googleapis.com/css2?family=Bree+Serif&family=Cabin&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
+/*
+font-family: 'Bree Serif', serif;
+font-family: 'Cabin', sans-serif;
+font-family: 'Lato', sans-serif;
+*/
+.app {
+  background-color: rgb(243, 246, 247);
+  height: 100vh;
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hidden-scroll-bars::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hidden-scroll-bars {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
