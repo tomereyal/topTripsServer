@@ -9,7 +9,7 @@ export async function insertNewVacation(
   const { title, fromDate, toDate, price, url, description } = vacationDetails;
 
   const [result] = await db.query<ResultSetHeader>(
-    `INSERT INTO trips.vacations (title,description,from_date,to_date,price,url)
+    `INSERT INTO vacations (title,description,from_date,to_date,price,url)
          VALUES(?,?,?,?,?,?)`,
     [title, description, fromDate, toDate, price, url]
   );
@@ -26,8 +26,8 @@ export async function getVacationsFromDb(
     const [vacations] = await db.query<DbQueryResult<VacationModel>>(
       `
       Select follows, a.vaca_id id, title,description, price,DATE_FORMAT(from_date,'%d/%m/%y') fromDate, DATE_FORMAT(to_date,'%d/%m/%y') toDate,url
-      FROM trips.vacations a LEFT JOIN ( SELECT count(1) follows, vaca_id,user_id FROM trips.user_vaca GROUP BY vaca_id) b ON a.vaca_id = b.vaca_id
-      WHERE a.vaca_id NOT IN (SELECT vaca_id FROM trips.user_vaca WHERE user_id =? ) 
+      FROM vacations a LEFT JOIN ( SELECT count(1) follows, vaca_id,user_id FROM user_vaca GROUP BY vaca_id) b ON a.vaca_id = b.vaca_id
+      WHERE a.vaca_id NOT IN (SELECT vaca_id FROM user_vaca WHERE user_id =? ) 
       LIMIT ?,?;
     `,
       [userId, current, current + fetchSize]
@@ -43,9 +43,9 @@ export async function getVacationsUserFollowsFromDb(userId: number) {
     const [vacations] = await db.query<DbQueryResult<VacationModel>>(
       `
         Select follows, a.vaca_id id, title,description, price,DATE_FORMAT(from_date,'%d/%m/%y') fromDate, DATE_FORMAT(to_date,'%d/%m/%y') toDate,url
-        FROM  (SELECT * FROM trips.user_vaca WHERE user_id = ?) a
-        LEFT JOIN( SELECT count(1) follows, vaca_id FROM trips.user_vaca WHERE user_id=  ?  GROUP BY vaca_id) b ON a.vaca_id = b.vaca_id 
-                LEFT JOIN trips.vacations c on a.vaca_id = c.vaca_id  LIMIT 20
+        FROM  (SELECT * FROM user_vaca WHERE user_id = ?) a
+        LEFT JOIN( SELECT count(1) follows, vaca_id FROM user_vaca WHERE user_id=  ?  GROUP BY vaca_id) b ON a.vaca_id = b.vaca_id 
+                LEFT JOIN vacations c on a.vaca_id = c.vaca_id  LIMIT 20
     `,
       [userId, userId]
     );
@@ -59,8 +59,8 @@ export async function getVacationsUserFollowsFromDb(userId: number) {
 export async function getVacationsFollowStatsFromDb() {
   try {
     const [vacationsFollowStats] = await db.query<DbQueryResult<VacationStat>>(
-      `Select follows, a.vaca_id id, title FROM trips.vacations a 
-  LEFT JOIN ( SELECT count(1) follows, vaca_id FROM trips.user_vaca GROUP BY vaca_id) b 
+      `Select follows, a.vaca_id id, title FROM vacations a 
+  LEFT JOIN ( SELECT count(1) follows, vaca_id FROM user_vaca GROUP BY vaca_id) b 
   ON a.vaca_id = b.vaca_id 
   WHERE follows IS NOT NULL;`
     );
@@ -74,7 +74,7 @@ export async function getVacationsFollowStatsFromDb() {
 export async function getVacationTotal() {
   try {
     const [result] = await db.query<DbQueryResult<{ total: number }>>(`
-    SELECT count(1) total FROM trips.vacations 
+    SELECT count(1) total FROM vacations 
     `);
 
     return result[0].total;
@@ -84,7 +84,7 @@ export async function getRemainingVacationTotal(userId: number) {
   try {
     const [result] = await db.query<DbQueryResult<{ total: number }>>(
       `
-    SELECT count(1) total FROM trips.vacations WHERE vaca_id  NOT IN (SELECT vaca_id FROM trips.user_vaca WHERE user_id = ?)  
+    SELECT count(1) total FROM vacations WHERE vaca_id  NOT IN (SELECT vaca_id FROM user_vaca WHERE user_id = ?)  
     `,
       [userId]
     );
@@ -101,7 +101,7 @@ export async function updateVacationInDb(
 
   const [result] = await db.query<ResultSetHeader>(
     `
-        UPDATE trips.vacations SET title=?,description=?, price=?,from_date =?, to_date =?,url=? WHERE vaca_id = ?
+        UPDATE vacations SET title=?,description=?, price=?,from_date =?, to_date =?,url=? WHERE vaca_id = ?
     `,
     [title, description, price, fromDate, toDate, url, id]
   );
@@ -111,7 +111,7 @@ export async function updateVacationInDb(
 export async function deleteVacationInDb(vacationId: number) {
   const [result] = await db.query<ResultSetHeader>(
     `
-        DELETE FROM trips.vacations WHERE  vaca_id = ?
+        DELETE FROM vacations WHERE  vaca_id = ?
     `,
     [vacationId]
   );

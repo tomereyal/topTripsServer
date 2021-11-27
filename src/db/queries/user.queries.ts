@@ -23,7 +23,7 @@ export async function getUser(username: string) {
   try {
     const [[result]] = await db.query<DbQueryResult<Partial<userTokenDetails>>>(
       `
-  SELECT password ,isAdmin, user_id id,first_name firstName,last_name lastName  FROM trips.users where username= ?;
+  SELECT password ,isAdmin, user_id id,first_name firstName,last_name lastName  FROM users where username= ?;
     `,
       [username]
     );
