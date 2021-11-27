@@ -53,6 +53,7 @@ if (process.env.NODE_ENV === "production") {
 // console.log(`I AM IN PRODUCTION`);
 // console.log(`process.env.NODE_ENV`, process.env.NODE_ENV);
 app.use(
+  "/api",
   expressJwt({ secret: JWT_SECRET }).unless({
     path: [
       "/api/users/register",
@@ -60,7 +61,6 @@ app.use(
       "/api/users/logout",
       "/api/users/auth",
       "/api/users/isUsernameTaken",
-      "/",
     ],
   })
 );
@@ -72,11 +72,8 @@ app.use("/api/uploads", uploadRouter);
 app.get("/*", (req, res) => {
   // res.send("Hi there!");
 
-  // ==> if you chose to put client folder outside service folder.. this will give you the toptrips parent folder
-  var rootFolder = __dirname.split("/").pop();
-  var rootrootFolder = rootFolder?.split("/").pop();
-  console.log(`rootrootFolder`, rootFolder);
-  res.sendFile("/client/build/index.html");
+  console.log(`root?`, path.join(__dirname, "client/build", "index.html"));
+  res.sendFile(path.join(__dirname, "client/build", "index.html"));
 });
 
 const ClientListener = {
