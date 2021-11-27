@@ -40,7 +40,7 @@ userRouter.get(
       console.log(`isUsernameTaken`, isUsernameTaken);
       return res.status(200).send({ isUsernameTaken });
     } catch (error) {
-      return next(new HttpException(500, "Username was not provided"));
+      return next(new HttpException(500, ` CAUGHT ERROR: ${error}`));
     }
   }
 );
