@@ -8,7 +8,7 @@ export async function insertNewUser(userDetails: Partial<UserModel>) {
 
   try {
     const [result] = await db.query<ResultSetHeader>(
-      `INSERT INTO users (first_name , last_name ,username,password)  
+      `INSERT INTO heroku_98a56fc31c47ffd.users (first_name , last_name ,username,password)  
       VALUES (?,?,?,?) `,
       [firstName, lastName, username, password]
     );
