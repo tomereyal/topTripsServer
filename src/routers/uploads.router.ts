@@ -38,11 +38,13 @@ const upload = multer({
 //   );
 // });
 uploadRouter.post("/", authAdmin, async (req, res) => {
-  imgbbUploader("your-imgbb-api-key-string", "path/to/your/image.png")
+  const url = req.body.url;
+
+  imgbbUploader("e8b79828062258c947e30bd18f6bb237", url)
     //@ts-ignore
     .then((response) => {
       console.log(response);
-      res.status(200).send({ url: `` });
+      res.status(200).send({ url: response.url });
     })
     //@ts-ignore
 
