@@ -14,6 +14,7 @@ import {
   setUserCredentials,
 } from "../../features/user/userSlice";
 import io, { Socket } from "socket.io-client";
+import { SERVER_BASE_URL } from "../serverConfig";
 
 
 
@@ -62,7 +63,7 @@ const ServerListener = ServerEvent;
 let socket: Socket;
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:4000/api/",
+  baseUrl: `${SERVER_BASE_URL}/`,
   prepareHeaders: (headers, { getState }) => {
     // By default, if we have a token in the store, let's use that for authenticated requests
     const tokenState = (getState() as RootState).user.accessToken;

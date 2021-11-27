@@ -24,13 +24,6 @@ export default function LoginPage() {
     <InnerLayout>
       <RightContainer>
         <LoginForm />
-        <button
-          onClick={() => {
-            console.log(`process.env.PUBLIC_URL`, process.env.PUBLIC_URL);
-          }}
-        >
-          GET PUBLIC URL
-        </button>
       </RightContainer>
     </InnerLayout>
   );
