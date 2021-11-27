@@ -43,12 +43,15 @@ app.use(
 app.use(express.static("uploads"));
 if (process.env.NODE_ENV === "production") {
   //e.g. Heroku is running our app
-  app.use(express.static("client/build"));
+  // app.use(express.static("client/build"));
+  app.use(express.static(path.join(__dirname, "../client/build")));
+
   console.log(`I AM IN PRODUCTION`);
 }
-app.use(express.static("client/build"));
-console.log(`I AM IN PRODUCTION`);
-console.log(`process.env.NODE_ENV`, process.env.NODE_ENV);
+// app.use(express.static("client/build"));
+
+// console.log(`I AM IN PRODUCTION`);
+// console.log(`process.env.NODE_ENV`, process.env.NODE_ENV);
 app.use(
   expressJwt({ secret: JWT_SECRET }).unless({
     path: [
@@ -57,6 +60,7 @@ app.use(
       "/api/users/logout",
       "/api/users/auth",
       "/api/users/isUsernameTaken",
+      "/",
     ],
   })
 );
