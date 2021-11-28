@@ -120,7 +120,6 @@ userRouter.post(
   ) => {
     const { username, password } = req.body;
     const refreshToken = req.cookies?.refreshToken;
-    console.log(`initial refresh token?`, refreshToken);
     const user = await _checkRefreshTokenOrLoginParams(
       username,
       password,
@@ -307,11 +306,7 @@ async function _generateRefreshToken(claims: {
     jwt_token,
     userId: Number(userId),
   });
-  console.log(
-    `_generaterefreshtoken: refresh token was added to server?`,
-    tokenAdded
-  );
-  console.log(`this is the token added===>`, jwt_token);
+
   if (tokenAdded) return jwt_token;
 }
 

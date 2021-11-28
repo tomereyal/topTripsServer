@@ -26,10 +26,11 @@ const { JWT_SECRET = "secret" } = process.env;
 const app = express();
 
 app.use(cors(corsOptions));
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
 app.use(
   express.urlencoded({
+    limit: "50mb",
     extended: true,
   })
 );
@@ -69,7 +70,7 @@ app.use("/api/users", userRouter);
 app.use("/api/vacations", vacationRouter);
 app.use("/api/uploads", uploadRouter);
 
-app.get("/*", (req, res) => {
+app.get("/", (req, res) => {
   // res.sendFile(path.join(rootDirectory, "client/build", "index.html"));
   res.status(200).json({ message: "welcome ", stage: process.env.NODE_ENV });
 });
@@ -89,7 +90,7 @@ const ClientEvent = ClientListener;
 const server = http.createServer(app);
 const io = require("socket.io")(server) as Socket;
 io.on("connection", (client: Socket) => {
-  console.log(`SOCKET CREATED`);
+  console.log(`WEB SOCKET CREATED FOR CLIENT`);
   client.emit(ClientListener.connected, {
     message: "Hello client I, the web socket server, and you are connected",
   });
@@ -102,7 +103,7 @@ io.on("connection", (client: Socket) => {
   //Listening to new vacation follow => if I heard the event, I will send ALL clients the current follow count
   //Listening to new vacation unfollow => if I heard the event, I will send ALL clients the current follow count
   client.on(ClientEvent.joinRoom, (vacationIds) => {
-    console.log(`This client follows the following vacations:`, vacationIds);
+    // console.log(`This client follows the following vacations:`, vacationIds);
     vacationIds.forEach((id: number) => client.join("vacation:" + id));
   });
 

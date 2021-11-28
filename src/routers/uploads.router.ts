@@ -1,52 +1,26 @@
-import { Router } from "express";
-import multer from "multer";
-import fs from "fs";
-import path from "path";
+import { NextFunction, Router } from "express";
+
 import { authAdmin } from "../middleware/auth.middleware";
-const imgbbUploader = require("imgbb-uploader");
+import HttpException from "../exceptions/HttpException";
+import { cloudinary } from "./../utils/cloudinary";
 export const uploadRouter = Router();
 
-// STORAGE MULTER CONFIG
-const upload = multer({
-  dest: "./uploads/",
-  fileFilter: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    if (ext !== ".jpg" && ext !== ".png" && ext !== ".mp4") {
-      return cb(new Error("only jpg, png, mp4 is allowed"));
+uploadRouter.post("/", authAdmin, async (req, res, next: NextFunction) => {
+  try {
+    const fileStr = req.body.data;
+    console.log(`fileStr`, fileStr);
+    try {
+      const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
+        upload_preset: `ml_default`,
+      });
+      console.log(`uploadedResponse`, uploadedResponse);
+      const url = uploadedResponse.url;
+      res.status(200).json({ url });
+    } catch (error) {
+      console.log(`error`, error);
+      return next(new HttpException(500, `error found: ${error}`));
     }
-    cb(null, true);
-  },
-});
-
-// uploadRouter.post("/", authAdmin, upload.single("avatar"), async (req, res) => {
-
-//   const fileType = req.file?.mimetype.split("/")[1];
-//   const newFilename = req.file?.filename + "." + fileType;
-//   console.log(`newFilename`, newFilename);
-//   fs.rename(
-//     `./uploads/${req.file?.filename}`,
-//     `./uploads/${newFilename}`,
-//     () => {
-//       const serverName =
-//         process.env.NODE_ENV === "production"
-//           ? "https://toptrips.herokuapp.com"
-//           : process.env.SERVER_URL;
-
-//       console.log(`url: `, `${serverName}/uploads/${newFilename}`);
-//       res.status(200).send({ url: `${serverName}/uploads/${newFilename}` });
-//     }
-//   );
-// });
-uploadRouter.post("/", authAdmin, async (req, res) => {
-  const url = req.body.url;
-
-  imgbbUploader("e8b79828062258c947e30bd18f6bb237", url)
-    //@ts-ignore
-    .then((response) => {
-      console.log(response);
-      res.status(200).send({ url: response.url });
-    })
-    //@ts-ignore
-
-    .catch((error) => console.error(error));
+  } catch (error) {
+    return next(new HttpException(500, `error found: ${error}`));
+  }
 });
