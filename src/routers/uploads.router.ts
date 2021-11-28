@@ -18,9 +18,13 @@ uploadRouter.post("/", authAdmin, async (req, res, next: NextFunction) => {
       res.status(200).json({ url });
     } catch (error) {
       console.log(`error`, error);
-      return next(new HttpException(500, `error found: ${error}`));
+      return next(
+        new HttpException(500, `error found: ${JSON.stringify(error)}`)
+      );
     }
   } catch (error) {
-    return next(new HttpException(500, `error found: ${error}`));
+    return next(
+      new HttpException(500, `error found: ${JSON.stringify(error)}`)
+    );
   }
 });
